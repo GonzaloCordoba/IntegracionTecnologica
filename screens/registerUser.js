@@ -15,14 +15,16 @@ export default class CreateUser extends React.Component{
         };
     }
     createNewUser = async () => {
+
         registration(
             this.state.email,
             this.state.password,
             this.state.lastName,
             this.state.name,
-          );
-        Alert.alert('Usuario Creado!');
+        );
         loggingOut();
+        Alert.alert('Usuario Creado!');
+        
         this.props.navigation.navigate('LoadingScreen');
         emptyState();
         

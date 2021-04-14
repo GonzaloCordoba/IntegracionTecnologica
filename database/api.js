@@ -21,11 +21,20 @@ export async function registration(email, password, lastName, name) {
   }
 }
 
-export async function signIn(email, password) {
+export async function signIn(email, password,latitude,longitude) {
   try {
     await firebase
       .auth()
       .signInWithEmailAndPassword(email, password);
+        const currentUser = firebase.auth().currentUser;
+
+        const db = firebase.firestore();
+        db.collection('users')
+        .doc(currentUser.uid)
+        .update({
+           latitude:latitude,
+           longitude:longitude
+        });    
   } catch (err) {
     Alert.alert('There is something wrong!', err.message);
   }
@@ -33,8 +42,35 @@ export async function signIn(email, password) {
 
 export async function loggingOut() {
   try {
-     firebase.auth().signOut();
+    await firebase.auth().signOut();
   } catch (err) {
     Alert.alert('There is something wrong!', err.message);
   }
 }
+
+export async function putLocation(location){
+    try {
+        
+    } catch (err) {
+        Alert.alert('There is something wrong!', err.message);
+    }
+}
+
+export async function savePublication(nameBook, nameAuthorBook, stateBook) {
+    try {
+      const currentUser = firebase.auth().currentUser;
+  
+      const db = firebase.firestore();
+      db.collection('publications')
+        .add({
+          nameBook: nameBook,
+          nameAuthorBook: nameAuthorBook,
+          stateBook: stateBook,
+          userId: currentUser.uid
+        });
+        Alert.alert('Guardada!');
+    } catch (err) {
+      Alert.alert('There is something wrong!', err.message);
+    }
+  }
+

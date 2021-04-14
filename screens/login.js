@@ -1,24 +1,53 @@
 import React,{ useState  } from 'react';
-import {View,Text,TextInput,ScrollView,StyleSheet, Button,ImageBackground} from 'react-native';
+import {View,Text,TextInput,ScrollView,StyleSheet, Button,ImageBackground,Alert} from 'react-native';
 import {signIn} from '../database/api';
+import * as Location from 'expo-location';
 
 export default class LoginUser extends React.Component{
     constructor(props) {
         super(props);
         this.state = { 
             email:"",
-            password: ""
+            password: "",
+            latitude:"",
+            longitude:"",
+            errorMsg:""
         };
+    }
+
+    getGeolocation = async () => {
+        let { status } = await Location.requestPermissionsAsync();
+        if (status !== 'granted') {
+          Alert.alert('Permission to access location was denied');
+          return;
+        }
+  
+        let location = await Location.getCurrentPositionAsync({});
+        let latitude = location.coords.latitude;
+        let longitude = location.coords.longitude;
+        this.setState({latitude});
+        this.setState({longitude})
+        console.log(this.state.longitude);
     }
 
     LoginUserOk = async () => {
         signIn(
             this.state.email,
             this.state.password,
+            this.state.latitude,
+            this.state.longitude
+            
           );
+        
         Alert.alert('Logueado!');
         this.props.navigation.navigate('LoadingScreen');
-        emptyState();
+        this.setstate = { 
+            email:"",
+            password: "",
+            latitude:"",
+            longitude:"",
+            errorMsg:""
+        };
     }
 
     render() {
@@ -32,6 +61,7 @@ export default class LoginUser extends React.Component{
                     <TextInput
                         placeholder="Email User" 
                         onChangeText={(value) =>  this.setState({email: value})}
+                        onFocus={this.getGeolocation.bind(this)}
                     />
 
                 </View>
