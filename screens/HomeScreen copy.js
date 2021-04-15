@@ -1,4 +1,4 @@
-import {ImageBackground, StyleSheet, View, Text, Image} from 'react-native';
+import {ImageBackground, StyleSheet, View, Text} from 'react-native';
 import React from 'react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
@@ -7,22 +7,15 @@ export default function HomeScreen ({navigation}) {
      <ImageBackground
       style={styles.background}
       source={require('../assets/background.jpg')}>
-            <View>
-          <Image
-            source={require('../assets/logo.png')}
-            style={styles.logo}
-            resizeMode="contain">
-          </Image>
-        </View>
-      {/* <View style={styles.titleContainer}>
+      <View style={styles.titleContainer}>
         <Text style={styles.title}>Bienvenido a Tinder-Libros</Text>
-      </View> */}
+      </View>
       <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('CreateUser')} >
-        <Text style={styles.buttonText}>Registrar</Text>
+        <Text style={styles.buttonText}>Sign Up</Text>
        </TouchableOpacity>
-      <Text style={styles.inlineText}>Ya tenes una cuenta?</Text>
+      <Text style={styles.inlineText}>Already have an account?</Text>
       <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('LoginUser')}>
-        <Text style={styles.buttonText}>Ingresar</Text>
+        <Text style={styles.buttonText}>Sign In</Text>
       </TouchableOpacity>
      </ImageBackground>
   )
@@ -36,30 +29,30 @@ const styles = StyleSheet.create({
   },
   button: {
     width: 200,
-    borderRadius: 0,
+    borderRadius: 15,
     borderWidth: 3,
     borderColor: 'white',
-    backgroundColor: '#2760ae',
+    backgroundColor: '#4ecdc4',
     padding: 5,
     margin: '2%'
   },
   buttonText: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: 'white',
+    color: 'navy',
     textAlign: 'center'
   },
   inlineText: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: 'black',
+    color: 'navy',
     textAlign: 'center',
     marginTop: '5%',
   },
   title: {
     fontSize: 35,
     fontWeight: 'bold',
-    color: 'orange',
+    color: 'white',
     textAlign: 'center'
   },
   titleContainer: {

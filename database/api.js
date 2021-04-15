@@ -56,7 +56,7 @@ export async function putLocation(location){
     }
 }
 
-export async function savePublication(nameBook, nameAuthorBook, stateBook) {
+export async function savePublication(nameBook, nameAuthorBook, stateBook,uri) {
     try {
       const currentUser = firebase.auth().currentUser;
   
@@ -66,7 +66,8 @@ export async function savePublication(nameBook, nameAuthorBook, stateBook) {
           nameBook: nameBook,
           nameAuthorBook: nameAuthorBook,
           stateBook: stateBook,
-          userId: currentUser.uid
+          userId: currentUser.uid,
+          
         });
         Alert.alert('Guardada!');
     } catch (err) {
@@ -74,3 +75,7 @@ export async function savePublication(nameBook, nameAuthorBook, stateBook) {
     }
   }
 
+  export async function getPublication(userid) {
+    
+   
+  }

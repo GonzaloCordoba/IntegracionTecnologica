@@ -41,6 +41,7 @@ export default class LoginUser extends React.Component{
         
         Alert.alert('Logueado!');
         this.props.navigation.navigate('LoadingScreen');
+        emptyState();
         this.setstate = { 
             email:"",
             password: "",
@@ -49,7 +50,7 @@ export default class LoginUser extends React.Component{
             errorMsg:""
         };
     }
-
+    
     render() {
         return(
         <ImageBackground
@@ -60,6 +61,8 @@ export default class LoginUser extends React.Component{
                 <View style={styles.inputGroup}>  
                     <TextInput
                         placeholder="Email User" 
+                        keyboardType="email-address"
+                        autoCapitalize="none"
                         onChangeText={(value) =>  this.setState({email: value})}
                         onFocus={this.getGeolocation.bind(this)}
                     />

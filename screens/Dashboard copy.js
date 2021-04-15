@@ -43,8 +43,7 @@ export default class Dashboard extends React.Component{
             const db = firebase.firestore();
                  
             db.collection('publications').where("userId","!=",this.state.userId)
-              .get()
-              .then((querySnapshot)=>{
+              .onSnapshot((querySnapshot)=>{
                   querySnapshot.forEach((doc)=>{
                       const pub = [];
                       const {nameAuthorBook,stateBook,nameBook,userId}=doc.data();
@@ -117,7 +116,7 @@ export default class Dashboard extends React.Component{
                            }) 
                         }; */}
 
-                        <View><Text>{d}</Text></View>                        
+                        <View><Text>{d  }</Text></View>                        
                     </ScrollView>
                  </ImageBackground > 
 

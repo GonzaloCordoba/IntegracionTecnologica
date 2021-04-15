@@ -14,7 +14,8 @@ export default class Dashboard extends React.Component{
             userId:currentUser.uid ,
             nameBook:""  ,
             nameAuthorBook:"",
-            stateBook:""
+            stateBook:"",
+            uri:""
         }
         
     }
@@ -67,16 +68,20 @@ export default class Dashboard extends React.Component{
         }
     };
     Publication = async () =>{
+        
         savePublication(
             this.state.nameBook,
             this.state.nameAuthorBook,
-            this.state.stateBook
+            this.state.stateBook,
+            this.state.uri
         );
+        this.state={
+            userId:currentUser.uid ,
+            nameBook:""  ,
+            nameAuthorBook:"",
+            stateBook:""
+        }
     }   
-
-
-
-
     render(){
         return(
             <ImageBackground

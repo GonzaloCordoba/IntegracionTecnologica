@@ -27,11 +27,9 @@ export default class CreateUser extends React.Component{
         
         this.props.navigation.navigate('LoadingScreen');
         emptyState();
-        
-        
-        
+         
     }
-
+    
     render(){
         return(
             <ImageBackground

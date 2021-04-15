@@ -4,10 +4,17 @@ import {View, StyleSheet} from "react-native";
 import { Icon } from 'react-native-elements'
 import {loggingOut} from '../database/api'
 
+import * as firebase from 'firebase';
+import 'firebase/firestore';
+
 export default class DrawerContentScreen extends Component {
 
     constructor(props){
         super(props);
+        const currentUser = firebase.auth().currentUser;
+        this.state={
+            userId:currentUser.email ,
+        }    
     }
 
 
@@ -16,6 +23,13 @@ export default class DrawerContentScreen extends Component {
         return(
             <View style={styles.container}>
                 <DrawerContentScrollView {...this.props}>
+                    <View style={styles.topDrawer}>
+                        <DrawerItem 
+                            icon={() => <Icon type="material-community" name="account-circle" style={styles.icon}/>}
+                            label={this.state.userId}
+                            
+                        />
+                    </View>
                     <View style={styles.topDrawer}>
                         <DrawerItem 
                             icon={() => <Icon type="material-community" name="home-outline" style={styles.icon}/>}
