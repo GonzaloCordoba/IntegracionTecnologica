@@ -42,8 +42,8 @@ export default class DrawerNavigator extends React.Component {
                 }}
                 drawerContent={props => <DrawerContentScreen onLogout={this.HandlerLogout}{...props}/>}
             >   
-                <Drawer.Screen name="Dashboard" component={Dashboard} />
-                <Drawer.Screen name="Dashboard2" component={Dashboard2} />
+                <Drawer.Screen name="Ver Trueques" component={Dashboard} />
+                <Drawer.Screen name="Publica tu Libro" component={Dashboard2} />
                 
             </Drawer.Navigator>
         );

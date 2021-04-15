@@ -77,5 +77,24 @@ export async function savePublication(nameBook, nameAuthorBook, stateBook,uri) {
 
   export async function getPublication(userid) {
     
-   
+        const db = firebase.firestore();
+        db.collection('publications').where("userId","!=",userid)
+          .onSnapshot((querySnapshot)=>{
+            const pub = [];
+            const uri = [];
+            querySnapshot.forEach((doc)=>{ 
+                const {nameAuthorBook,stateBook,nameBook,userId}=doc.data();
+                
+                pub.push({
+                    idPublicacion:doc.id,
+                    nameAuthorBook,
+                    stateBook,
+                    nameBook,
+                    userId,
+                    
+                })    
+            })
+           console.log(pub);
+            //return(pub);
+          })
   }

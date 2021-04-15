@@ -31,24 +31,29 @@ export default class LoginUser extends React.Component{
     }
 
     LoginUserOk = async () => {
-        signIn(
-            this.state.email,
-            this.state.password,
-            this.state.latitude,
-            this.state.longitude
+        if(this.state.email || this.state.password ){
+            signIn(
+                this.state.email,
+                this.state.password,
+                this.state.latitude,
+                this.state.longitude
+                
+              );
             
-          );
+            Alert.alert('Logueado!');
+            this.props.navigation.navigate('LoadingScreen');
+            emptyState();
+            this.setstate = { 
+                email:"",
+                password: "",
+                latitude:"",
+                longitude:"",
+                errorMsg:""
+            };
+        }else{
+            Alert.alert("Faltan campos");
+        }
         
-        Alert.alert('Logueado!');
-        this.props.navigation.navigate('LoadingScreen');
-        emptyState();
-        this.setstate = { 
-            email:"",
-            password: "",
-            latitude:"",
-            longitude:"",
-            errorMsg:""
-        };
     }
     
     render() {

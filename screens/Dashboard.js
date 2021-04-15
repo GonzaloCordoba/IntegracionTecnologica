@@ -14,7 +14,7 @@ export default class Dashboard extends React.Component{
             dataPub:null
            
         }
-        this.onPressHandler();
+        //this.onPressHandler();
     }
     // getImageUri = async () =>{
     //      this.state.dataPub.forEach((pub) => {
@@ -43,8 +43,7 @@ export default class Dashboard extends React.Component{
             const db = firebase.firestore();
                  
             db.collection('publications').where("userId","!=",this.state.userId)
-              .get()
-              .then((querySnapshot)=>{
+              .onSnapshot((querySnapshot)=>{
                   querySnapshot.forEach((doc)=>{
                       const pub = [];
                       const {nameAuthorBook,stateBook,nameBook,userId}=doc.data();
@@ -89,12 +88,16 @@ export default class Dashboard extends React.Component{
         if(this.state.dataPub === undefined || this.state.dataPub === null || this.state.dataPub === 0 || this.state.dataPub === ''){
             return(
                 <ImageBackground
-                style={styles.background}
-                source={require('../assets/background.jpg')}> 
-                <ScrollView style={styles.container}>
-                    <Text>No hay datos...</Text>
-                </ScrollView>
-            </ImageBackground>      
+                    style={styles.background}
+                    source={require('../assets/background.jpg')}> 
+                    <ScrollView style={styles.container}>
+                        <View style={styles.inputGroup}>
+                            <Button title="VER PUBLICACION" onPress={this.onPressHandler.bind(this)}/>
+                        </View>
+                   
+                        
+                    </ScrollView>
+                </ImageBackground>     
             );        
         }else{
             return(
@@ -117,7 +120,7 @@ export default class Dashboard extends React.Component{
                            }) 
                         }; */}
 
-                        <View><Text>{d}</Text></View>                        
+                        <View><Text>{d  }</Text></View>                        
                     </ScrollView>
                  </ImageBackground > 
 

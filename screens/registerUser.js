@@ -15,18 +15,26 @@ export default class CreateUser extends React.Component{
         };
     }
     createNewUser = async () => {
-
-        registration(
-            this.state.email,
-            this.state.password,
-            this.state.lastName,
-            this.state.name,
-        );
-        loggingOut();
-        Alert.alert('Usuario Creado!');
+        if(this.state.password || this.state.email || this.state.name || this.state.lastName){
+            if(this.state.password === this.state.password2 ){
+                registration(
+                    this.state.email,
+                    this.state.password,
+                    this.state.lastName,
+                    this.state.name,
+                );
+                loggingOut();
+                Alert.alert('Usuario Creado!');
+                
+                this.props.navigation.navigate('LoadingScreen');
+                emptyState();
+            }else{
+                Alert.alert("La passwords deben coincidir")
+            }   
+        }else{
+            Alert.alert("Por favor ingrese todos los campos")
+        }
         
-        this.props.navigation.navigate('LoadingScreen');
-        emptyState();
          
     }
     

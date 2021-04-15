@@ -6,7 +6,7 @@ import {savePublication} from '../database/api';
 import * as ImagePicker from 'expo-image-picker';
 
 
-export default class Dashboard extends React.Component{
+export default class Dashboard2 extends React.Component{
     constructor(props) {
         super(props);
         const currentUser = firebase.auth().currentUser;
@@ -68,19 +68,24 @@ export default class Dashboard extends React.Component{
         }
     };
     Publication = async () =>{
-        
-        savePublication(
-            this.state.nameBook,
-            this.state.nameAuthorBook,
-            this.state.stateBook,
-            this.state.uri
-        );
-        this.state={
-            userId:currentUser.uid ,
-            nameBook:""  ,
-            nameAuthorBook:"",
-            stateBook:""
+        if(this.state.nameAuthorBook || this.state.nameAuthorBook || this.state.stateBook ){
+            savePublication(
+                this.state.nameBook,
+                this.state.nameAuthorBook,
+                this.state.stateBook,
+                this.state.uri
+            );
+            this.state={
+                userId:currentUser.uid ,
+                nameBook:""  ,
+                nameAuthorBook:"",
+                stateBook:""
+            }
+            
+        }else{
+            Alert.alert("Por favor ingrese todos los campos")
         }
+       
     }   
     render(){
         return(
