@@ -123,32 +123,10 @@ export default class Dashboard extends React.Component{
                     </ScrollView>
                  </ImageBackground > 
 
-                // <ImageBackground
-                //     style={styles.background}
-                //     source={require('../assets/background.jpg')}> 
-                //     <ScrollView style={styles.container}>
-                //         <View style={styles.inputGroup}>
-                //             <Button title="VER PUBLICACION" onPress={this.onPressHandler.bind(this)}/>
-                //         </View>
-                   
-                        
-                //     </ScrollView>
-                // </ImageBackground>  
+             
             );
         }
-        // return(
-        //     <ImageBackground
-        //         style={styles.background}
-        //         source={require('../assets/background.jpg')}> 
-        //         <ScrollView style={styles.container}>
-        //             <View style={styles.inputGroup}>
-        //                 <Button title="VER PUBLICACION" onPress={this.onPressHandler.bind(this)}/>
-        //             </View>
-               
-                    
-        //         </ScrollView>
-        //     </ImageBackground>  
-        // );
+      
     }  
 
 }
