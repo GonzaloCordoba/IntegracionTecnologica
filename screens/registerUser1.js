@@ -2,7 +2,7 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React,{ useState  } from 'react';
 import {View,Text,TextInput,ScrollView,StyleSheet, Button,} from 'react-native';
-import firebase from '../database/firebase'
+import firebase from '../database/keys'
 
 const CreateUser = () =>{
 

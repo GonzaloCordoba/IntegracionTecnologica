@@ -18,8 +18,11 @@ export default class App extends React.Component {
 }
   render(){
     return (
-      
-        <RootNavigator />
+      <React.StrictMode>
+          <RootNavigator />
+      </React.StrictMode>
+        
+        
     );
 }
 

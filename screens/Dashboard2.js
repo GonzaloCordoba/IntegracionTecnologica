@@ -2,7 +2,7 @@ import React,{ useState  } from 'react';
 import {View,Text,TextInput,ScrollView,StyleSheet, Button,ImageBackground,Alert} from 'react-native';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
-import {savePublication} from '../database/api';
+import {savePublication, getImageUri} from '../database/api';
 import * as ImagePicker from 'expo-image-picker';
 
 
@@ -15,7 +15,8 @@ export default class Dashboard2 extends React.Component{
             nameBook:""  ,
             nameAuthorBook:"",
             stateBook:"",
-            uri:""
+            uri:"",
+            imgLoadded: false,
         }
         
     }
@@ -42,48 +43,65 @@ export default class Dashboard2 extends React.Component{
             const resultImagePicker = await ImagePicker.launchImageLibraryAsync({
               allowsEditing: true,
               aspect: [4, 3]
-        });
+            });
         
             if (resultImagePicker.cancelled === false) {
                 const imageUri = resultImagePicker.uri;
                 this.uploadImage(imageUri)
-            .then(resolve => {
-                let ref = firebase
-                .storage()
-                .ref()
-                .child(`images/${this.state.userId}`);
-                ref
-                .put(resolve)
                 .then(resolve => {
-                    console.log("Imagen subida correctamente");
+                    let ref = firebase
+                    .storage()
+                    .ref()
+                    .child(`images/${this.state.userId}`);
+                    ref
+                    .put(resolve)
+                    .then(resolve => {
+                        console.log("Imagen subida correctamente");
+                        this.setState({imgLoadded: true})
+                    })
+                    .catch(error => {
+                        console.log("Error al subir la imagen" + error);
+                    });
                 })
                 .catch(error => {
-                    console.log("Error al subir la imagen");
+                    console.log(error);
                 });
-            })
-            .catch(error => {
-                console.log(error);
-            });
+            }else{
+                this.setState({imgLoadded: false})
             }
+           
         }
+      
     };
+
     Publication = async () =>{
-        if(this.state.nameAuthorBook || this.state.nameAuthorBook || this.state.stateBook ){
-            savePublication(
-                this.state.nameBook,
-                this.state.nameAuthorBook,
-                this.state.stateBook,
-                this.state.uri
-            );
+      
+        
+        if((this.state.nameAuthorBook || this.state.nameAuthorBook || this.state.stateBook) && this.state.imgLoadded === true){
+            
+            getImageUri(this.state.userId).then((uri) =>{
+                this.setState({uri:uri.res})
+                console.log(this.state.uri);
+                savePublication(
+                    this.state.nameBook,
+                    this.state.nameAuthorBook,
+                    this.state.stateBook,
+                    this.state.uri,
+                    this.state.userId
+                );
+            }).catch((err)=>{
+                console.log(err);
+            })
             this.state={
                 userId:currentUser.uid ,
                 nameBook:""  ,
                 nameAuthorBook:"",
-                stateBook:""
+                stateBook:"",
+                imgLoadded: false
             }
             
         }else{
-            Alert.alert("Por favor ingrese todos los campos")
+            Alert.alert("Por favor ingrese todos los campos y la imagen")
         }
        
     }   

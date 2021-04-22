@@ -1,5 +1,5 @@
 import React,{ useState  } from 'react';
-import {View,Text,TextInput,ScrollView,StyleSheet, Button,ImageBackground,Card, ListItem,CardItem,Body,Alert} from 'react-native';
+import {View,Text,TextInput,ScrollView,StyleSheet, Button,ImageBackground,Card, ListItem,CardItem,Body,Alert,FlatList} from 'react-native';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 import {getPublication} from '../database/api';
@@ -8,36 +8,28 @@ export default class Dashboard extends React.Component{
     constructor(props) {
         super(props);
         const currentUser = firebase.auth().currentUser;
-        
         this.state={
             userId: currentUser.uid,
-            dataPub:null
+            dataPub:[],
+            isDataLoaded:false
            
         }
+        
         //this.onPressHandler();
     }
-    // getImageUri = async () =>{
-    //      this.state.dataPub.forEach((pub) => {
-    //          firebase
-    //          .storage()
-    //          .ref(`images/${pub.userId}`)
-    //          .getDownloadURL()
-    //          .then(resolve => {
-    //              console.log(pub);
-    //              this.state.dataPub.push({
-    //                  uri:resolve
-    //              })
-    //          }) 
-    //          .catch(error => {
-    //              console.log(error);
-    //          });
-    //      })  
-    //  }
-
-    componentDidMount = async () =>{
     
+
+    
+    onPressHandler(){
+      
+        getPublication(this.state.userId).then(res=>{
+            this.setState({dataPub:res.pub,isDataLoaded:true})
+            console.log(this.state.dataPub)
+        }).catch((err)=>{
+            console.log(err)
+        })  
     }
-    onPressHandler = async () => {
+    onPressHandler2 = async () => {
         try {
             let uri = '';
             const db = firebase.firestore();
@@ -80,19 +72,21 @@ export default class Dashboard extends React.Component{
             Alert.alert('There is something wrong!', err.message);
          }       
     }
+    
+
     render(){
-        console.log(this.state.dataPub)
         
-        const p = this.state.dataPub;
-        const d = JSON.stringify(this.state.dataPub);
-        if(this.state.dataPub === undefined || this.state.dataPub === null || this.state.dataPub === 0 || this.state.dataPub === ''){
+        
+        
+        
+        if(this.state.isDataLoaded === false){
             return(
                 <ImageBackground
                     style={styles.background}
                     source={require('../assets/background.jpg')}> 
                     <ScrollView style={styles.container}>
                         <View style={styles.inputGroup}>
-                            <Button title="VER PUBLICACION" onPress={this.onPressHandler.bind(this)}/>
+                            <Button title="VER PUBLICACION"  onPress={this.onPressHandler.bind(this)}/>
                         </View>
                    
                         
@@ -100,17 +94,23 @@ export default class Dashboard extends React.Component{
                 </ImageBackground>     
             );        
         }else{
+            const p = this.state.dataPub;
+            const d = JSON.stringify(this.state.dataPub);
+            console.log(p);
             return(
                 <ImageBackground
                     style={styles.background}
                     source={require('../assets/background.jpg')}> 
                     <ScrollView style={styles.container}>
-
+                     {/* <FlatList
+                        data={this.state.dataPub}
+                        renderItem={({item})=><Text>{item.nameBook}</Text>}
+                     /> */}
                         {/* {
-                           p.map((index) =>{
+                           d.map((index,i) =>{
                                return(
                                 <ListItem 
-                                    key={index.idPublicacion}
+                                    key={i}
                                 >
                                     <ListItem.Content>
                                         <ListItem.Title>{index.nameBook}</ListItem.Title>
@@ -118,9 +118,8 @@ export default class Dashboard extends React.Component{
                                 </ListItem>
                                )           
                            }) 
-                        }; */}
-
-                        <View><Text>{d  }</Text></View>                        
+                        };  */}
+                         <View><Text>{d }</Text></View>                        
                     </ScrollView>
                  </ImageBackground > 
 

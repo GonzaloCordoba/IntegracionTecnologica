@@ -56,17 +56,17 @@ export async function putLocation(location){
     }
 }
 
-export async function savePublication(nameBook, nameAuthorBook, stateBook,uri) {
+export async function savePublication(nameBook, nameAuthorBook, stateBook,uri,userId) {
     try {
-      const currentUser = firebase.auth().currentUser;
-  
+       
       const db = firebase.firestore();
       db.collection('publications')
         .add({
           nameBook: nameBook,
           nameAuthorBook: nameAuthorBook,
           stateBook: stateBook,
-          userId: currentUser.uid,
+          userId: userId,
+          uri:uri
           
         });
         Alert.alert('Guardada!');
@@ -76,25 +76,51 @@ export async function savePublication(nameBook, nameAuthorBook, stateBook,uri) {
   }
 
   export async function getPublication(userid) {
-    
+    return new Promise ((resolve,reject) =>{
+      try{
         const db = firebase.firestore();
         db.collection('publications').where("userId","!=",userid)
-          .onSnapshot((querySnapshot)=>{
-            const pub = [];
-            const uri = [];
-            querySnapshot.forEach((doc)=>{ 
-                const {nameAuthorBook,stateBook,nameBook,userId}=doc.data();
-                
-                pub.push({
-                    idPublicacion:doc.id,
-                    nameAuthorBook,
-                    stateBook,
-                    nameBook,
-                    userId,
-                    
-                })    
+        .onSnapshot((querySnapshot)=>{
+          const pub = [];
+          querySnapshot.forEach((doc)=>{
+            const {nameAuthorBook,stateBook,nameBook,userId,uri}=doc.data();
+            pub.push({
+              idPublicacion:doc.id,
+              nameAuthorBook,
+              stateBook,
+              nameBook,
+              userId,
+              uri
             })
-           console.log(pub);
-            //return(pub);
           })
+          resolve({pub})   
+        })
+
+      }catch (err){
+        reject()
+        console.log(err)
+      }
+    })    
+
   }
+
+export async function getImageUri(userId){
+  return new Promise ((resolve,reject) =>{
+    try{
+        firebase
+      .storage()
+      .ref(`images/${userId}`)
+      .getDownloadURL()
+      .then(res => {
+        resolve({res});
+      }) 
+      .catch(error => {
+          console.log(error);
+      });
+      
+    }catch(err){
+      reject();
+    }  
+  })
+
+}
