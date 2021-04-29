@@ -18,9 +18,9 @@ export default class App extends React.Component {
 }
   render(){
     return (
-      <React.StrictMode>
+      
           <RootNavigator />
-      </React.StrictMode>
+      
         
         
     );

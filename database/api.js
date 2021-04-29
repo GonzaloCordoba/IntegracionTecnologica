@@ -124,3 +124,50 @@ export async function getImageUri(userId){
   })
 
 }
+
+export async function saveMatch(userId, userPubId, idPublicacion,match) {
+  try {
+     
+    const db = firebase.firestore();
+    db.collection('matchs')
+      .add({
+        userId: userId,
+        userPubId: userPubId,
+        idPublicacion: idPublicacion,
+        match: match,
+        
+      });
+      Alert.alert('Like!');
+  } catch (err) {
+    Alert.alert('There is something wrong!', err.message);
+  }
+}
+
+export async function isMatch(userid,userPub){
+  try {
+    const db = firebase.firestore();
+    db.collection('matchs').where("userId","==",userPub)
+    .onSnapshot((querySnapshot)=>{
+      const match = [];
+      querySnapshot.forEach((doc)=>{
+        const {idPublicacion,match,userId,userPubId}=doc.data();
+        match.push({
+          idmatch:doc.id,
+          idPublicacion,
+          match,
+          userPubId,
+          userId,
+        })
+      })
+      if(match === undefined || match === [] || match === null || match.length === 0){
+        console.log('No Hay match')
+        console.log(match); 
+      }else{ 
+        console.log('Hay match')
+        console.log(match);
+      }  
+    })    
+  } catch (error) {
+    Alert.alert('Algo salio mal!:',error)
+  }                    
+}

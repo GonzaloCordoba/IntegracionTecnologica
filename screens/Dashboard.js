@@ -1,135 +1,89 @@
-import React,{ useState  } from 'react';
-import {View,Text,TextInput,ScrollView,StyleSheet, Button,ImageBackground,Card, ListItem,CardItem,Body,Alert,FlatList} from 'react-native';
+import React,{ useState , useEffect,useRef,componentWillUnmount  } from 'react';
+import {View,Text,TextInput,ScrollView,StyleSheet, Button,ImageBackground,Card, ListItem,CardItem,Body,Alert,FlatList,SafeAreaView} from 'react-native';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
-import {getPublication} from '../database/api';
+import {getPublication,saveMatch,isMatch} from '../database/api';
+import CardCustom from './CardCustom'
+import Swipe from './Swipe'
+import BottomBar from './BottomBar' 
 
-export default class Dashboard extends React.Component{
-    constructor(props) {
-        super(props);
-        const currentUser = firebase.auth().currentUser;
-        this.state={
-            userId: currentUser.uid,
-            dataPub:[],
-            isDataLoaded:false
-           
-        }
-        
-        //this.onPressHandler();
-    }
-    
-
-    
-    onPressHandler(){
-      
-        getPublication(this.state.userId).then(res=>{
-            this.setState({dataPub:res.pub,isDataLoaded:true})
-            console.log(this.state.dataPub)
+export default function Dashboard(){
+    const [dataPub,setDataPub] = useState([]);
+    const [userId, setUserId] = useState('');
+    const [isDataLoaded, setIsDataLoaded] = useState(false);
+    const  [currentIndex, setCurrentIndex] = useState(0);
+    const currentUser = firebase.auth().currentUser;
+    const swipesRef = useRef(null)
+    useEffect(()=>{
+        getPublication(currentUser.uid).then(res=>{
+            setDataPub(res.pub)
+            console.log(dataPub)
         }).catch((err)=>{
             console.log(err)
-        })  
+        })
+        return () => {
+            
+            setCurrentIndex(0)
+            setIsDataLoaded(false)
+            setDataPub([])
+            setCurrentIndex(0)   
+        }
+       
+    },[])
+ 
+    function handleLike() {
+        console.log(currentIndex)
+        console.log(dataPub.length);
+        saveMatch(currentUser.uid,dataPub[currentIndex].userId,dataPub[currentIndex].idPublicacion,false);
+        //isMatch(currentUser.uid,dataPub[currentIndex].userId);
+        nextUser()
     }
-    onPressHandler2 = async () => {
-        try {
-            let uri = '';
-            const db = firebase.firestore();
-                 
-            db.collection('publications').where("userId","!=",this.state.userId)
-              .onSnapshot((querySnapshot)=>{
-                  querySnapshot.forEach((doc)=>{
-                      const pub = [];
-                      const {nameAuthorBook,stateBook,nameBook,userId}=doc.data();
-                      firebase
-                        .storage()
-                        .ref(`images/${doc.data().userId}`)
-                        .getDownloadURL()
-                        .then(resolve => {
-                        //console.log(resolve);
-                        pub.push({
-                            idPublicacion:doc.id,
-                            nameAuthorBook,
-                            stateBook,
-                            nameBook,
-                            userId,
-                            uri:resolve
-                        })
-                        this.setState({dataPub:pub})
-                        //console.log(pub)
-                
-                    }) 
-                    .catch(error => {
-                    console.log(error);
-                    });
-                      //console.log(doc.id,"=>",doc.data())
-                      
-                     
-                    
-                  })
-              })
-                    
-        } 
-        catch (err) {
-            Alert.alert('There is something wrong!', err.message);
-         }       
-    }
-    
 
-    render(){
+    function handlePass() {
+        console.log(currentIndex)
+        nextUser()
+    }
+
+    function nextUser() {
+        const nextIndex =  currentIndex + 1
+        setCurrentIndex(nextIndex)
+    }
+
+    function onPressHandler(){
+        setIsDataLoaded(true)    
+    }
+
+    function handleLikePress() {
+        swipesRef.current.openLeft()
+    }
+    function handlePassPress() {
+        swipesRef.current.openRight()
+    }
+    function verTrueques(){
+
+    }
+    return(
         
-        
-        
-        
-        if(this.state.isDataLoaded === false){
-            return(
-                <ImageBackground
+        <ImageBackground
                     style={styles.background}
-                    source={require('../assets/background.jpg')}> 
+                    source={require('../assets/background.jpg')}>
                     <ScrollView style={styles.container}>
                         <View style={styles.inputGroup}>
-                            <Button title="VER PUBLICACION"  onPress={this.onPressHandler.bind(this)}/>
+                            {isDataLoaded === false && <Button title="VER PUBLICACION"  onPress={onPressHandler}/>}
+                            {dataPub.length === (currentIndex) &&<Text>No hay mas Libros</Text>}
+                            {isDataLoaded === true && dataPub.length != (currentIndex )  && dataPub.length > 1 && dataPub.map((d,i)=> currentIndex===i &&(
+                                <Swipe key={i} ref={swipesRef}  dataPub={dataPub} currentIndex={currentIndex} handleLike={handleLike} handlePass={handlePass}></Swipe>
+                                
+                            ))}
+                           
                         </View>
-                   
-                        
+                        {isDataLoaded === true && dataPub.length !=(currentIndex) && <BottomBar handleLikePress={handleLikePress} handlePassPress={handlePassPress} />}
+                                
                     </ScrollView>
-                </ImageBackground>     
-            );        
-        }else{
-            const p = this.state.dataPub;
-            const d = JSON.stringify(this.state.dataPub);
-            console.log(p);
-            return(
-                <ImageBackground
-                    style={styles.background}
-                    source={require('../assets/background.jpg')}> 
-                    <ScrollView style={styles.container}>
-                     {/* <FlatList
-                        data={this.state.dataPub}
-                        renderItem={({item})=><Text>{item.nameBook}</Text>}
-                     /> */}
-                        {/* {
-                           d.map((index,i) =>{
-                               return(
-                                <ListItem 
-                                    key={i}
-                                >
-                                    <ListItem.Content>
-                                        <ListItem.Title>{index.nameBook}</ListItem.Title>
-                                    </ListItem.Content>
-                                </ListItem>
-                               )           
-                           }) 
-                        };  */}
-                         <View><Text>{d }</Text></View>                        
-                    </ScrollView>
-                 </ImageBackground > 
-
-             
-            );
-        }
-      
-    }  
-
+                </ImageBackground>
+    )
 }
+
 const styles = StyleSheet.create({
     container:{
         flex:1,
@@ -149,6 +103,6 @@ const styles = StyleSheet.create({
      },
      background:{
         flex: 1
-    
+
      }
 })
