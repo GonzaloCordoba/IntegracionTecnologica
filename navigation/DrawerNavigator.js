@@ -4,6 +4,8 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 // Screens
 import Dashboard from "../screens/Dashboard";
 import Dashboard2 from "../screens/Dashboard2";
+import Dashboard3 from "../screens/Dashboard3";
+
 
 import DrawerContentScreen from "../screens/DrawerContentScreen";
 
@@ -44,6 +46,7 @@ export default class DrawerNavigator extends React.Component {
             >   
                 <Drawer.Screen name="Ver Trueques" component={Dashboard} />
                 <Drawer.Screen name="Publica tu Libro" component={Dashboard2} />
+                <Drawer.Screen name="Matches" component={Dashboard3} />
                 
             </Drawer.Navigator>
         );

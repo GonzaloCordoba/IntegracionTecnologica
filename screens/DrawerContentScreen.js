@@ -44,6 +44,13 @@ export default class DrawerContentScreen extends Component {
                             onPress={() => this.props.navigation.navigate("Publica tu Libro")}
                         />
                     </View>
+                    <View style={styles.topDrawer}>
+                        <DrawerItem 
+                            icon={() => <Icon type="material-community" name="home-outline" style={styles.icon}/>}
+                            label="Matches"
+                            onPress={() => this.props.navigation.navigate("Matches")}
+                        />
+                    </View>
                 </DrawerContentScrollView>
                 <View style={styles.bottomDrawer}>
                     <DrawerItem 

@@ -26,7 +26,7 @@ export default function Dashboard(){
             setCurrentIndex(0)
             setIsDataLoaded(false)
             setDataPub([])
-            setCurrentIndex(0)   
+             
         }
        
     },[])
@@ -35,7 +35,7 @@ export default function Dashboard(){
         console.log(currentIndex)
         console.log(dataPub.length);
         saveMatch(currentUser.uid,dataPub[currentIndex].userId,dataPub[currentIndex].idPublicacion,false);
-        //isMatch(currentUser.uid,dataPub[currentIndex].userId);
+        isMatch(currentUser.uid,dataPub[currentIndex].userId);
         nextUser()
     }
 
