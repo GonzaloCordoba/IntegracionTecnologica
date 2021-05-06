@@ -15,6 +15,7 @@ export async function registration(email, password, lastName, name) {
         email: currentUser.email,
         lastName: lastName,
         firstName: name,
+        userId:currentUser.uid
       });
   } catch (err) {
     Alert.alert('There is something wrong!', err.message);
@@ -34,7 +35,8 @@ export async function signIn(email, password,latitude,longitude) {
         .update({
            latitude:latitude,
            longitude:longitude
-        });    
+        });
+      Alert.alert('Logueado!');
   } catch (err) {
     Alert.alert('There is something wrong!', err.message);
   }
@@ -73,7 +75,7 @@ export async function savePublication(nameBook, nameAuthorBook, stateBook,uri,us
     } catch (err) {
       Alert.alert('There is something wrong!', err.message);
     }
-  }
+}
 
   export async function getPublication(userid) {
     return new Promise ((resolve,reject) =>{
@@ -102,7 +104,7 @@ export async function savePublication(nameBook, nameAuthorBook, stateBook,uri,us
       }
     })    
 
-  }
+}
 
 export async function getImageUri(userId){
   return new Promise ((resolve,reject) =>{
@@ -137,8 +139,8 @@ export async function saveMatch(userId, userPubId, idPublicacion,match) {
         match: match,
         
       });
-      Alert.alert('Like!');
-      //console.log('like');
+      //Alert.alert('Like!');
+      console.log('like');
   } catch (err) {
     Alert.alert('There is something wrong!', err);
   }
@@ -194,7 +196,8 @@ export async function isMatch(userid,userPub){
               match:true,
             })  
           })
-          console.log('okk');          
+          console.log('okk');
+          Alert.alert('Es un match')          
         }catch (error) {
           Alert.alert('Algo salio mal!:',error.message)
         }
@@ -209,16 +212,14 @@ export async function getAllMatchs(userid){
   return new Promise ((resolve,reject) =>{
     try{
       const db = firebase.firestore();
-      db.collection('Matchs').where("userId","==",userid).where("match","==",true)
+      db.collection('matchs').where("userId","==",userid).where("match","==",true)
       .onSnapshot((querySnapshot)=>{
         const data = [];
         querySnapshot.forEach((doc)=>{
-          const {idPublicacion,match,userId,userPubId}=doc1.data();
+          const {idPublicacion,match,userId,userPubId}=doc.data();
+          let id = userPubId;
           data.push({
-            idmatch:doc1.id,
-            idPublicacion,
-            match,
-            userId,
+           
             userPubId    
           })
         })
@@ -232,4 +233,65 @@ export async function getAllMatchs(userid){
     }
   })    
 
+}
+
+export async function getAllUserById(data){
+  
+  return new Promise((resolve,reject)=>{
+    try {
+      //console.log(data)
+      const db = firebase.firestore();
+      const users= [];
+      data.forEach((element)=>{
+        db.collection('users').doc(element.userPubId)
+        .onSnapshot((res1)=>{
+          //console.log(res1.data())
+          const {email,firstName,lastName,latitude,longitude}=res1.data()
+          users.push({
+            userId:res1.id,
+            email,
+            firstName,
+            lastName,
+            latitude,
+            longitude
+          })
+          
+        })
+        resolve(users);
+      })
+      //console.log(users)
+      
+
+    } catch (error) {
+      reject()
+      console.log(err)  
+    }
+  })
+}
+
+export function getAllUserByIdd(data){
+  const db = firebase.firestore();
+  const users= [];
+  data.forEach((element)=>{
+    db.collection('users').doc(element.userPubId)
+    .onSnapshot((res1)=>{
+      //console.log(res1.data())
+      const {email,firstName,lastName,latitude,longitude}=res1.data()
+      users.push({
+        userId:res1.id,
+        email,
+        firstName,
+        lastName,
+        latitude,
+        longitude
+      })
+      
+    })
+  })
+  if(users !=[]){
+    return users
+  }else{
+    return null
+  }
+ 
 }

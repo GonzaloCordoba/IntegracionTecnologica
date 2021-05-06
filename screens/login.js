@@ -40,7 +40,7 @@ export default class LoginUser extends React.Component{
                 
               );
             
-            Alert.alert('Logueado!');
+            
             this.props.navigation.navigate('LoadingScreen');
             emptyState();
             this.setstate = { 
