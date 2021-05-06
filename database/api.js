@@ -268,30 +268,3 @@ export async function getAllUserById(data){
     }
   })
 }
-
-export function getAllUserByIdd(data){
-  const db = firebase.firestore();
-  const users= [];
-  data.forEach((element)=>{
-    db.collection('users').doc(element.userPubId)
-    .onSnapshot((res1)=>{
-      //console.log(res1.data())
-      const {email,firstName,lastName,latitude,longitude}=res1.data()
-      users.push({
-        userId:res1.id,
-        email,
-        firstName,
-        lastName,
-        latitude,
-        longitude
-      })
-      
-    })
-  })
-  if(users !=[]){
-    return users
-  }else{
-    return null
-  }
- 
-}
